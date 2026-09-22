@@ -231,7 +231,7 @@ kbd {
   }
 }
 
-/* Modal de exposición */
+/* Modal de exposición — estático, sin animaciones de entrada */
 .exhibit {
   position: fixed;
   inset: 0;
@@ -242,16 +242,6 @@ kbd {
   background: radial-gradient(circle at 50% 40%, rgba(16, 22, 38, 0.92), rgba(5, 8, 15, 0.98));
   backdrop-filter: blur(4px);
   z-index: 20;
-  animation: fadeIn 0.15s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .exhibit-card {
@@ -262,18 +252,6 @@ kbd {
   background: #141a2a;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-  animation: pop 0.18s ease-out;
-}
-
-@keyframes pop {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 .exhibit-band {
@@ -397,4 +375,133 @@ kbd {
   background: rgba(255, 255, 255, 0.12);
   border-radius: 4px;
   padding: 0.05rem 0.35rem;
+}
+
+/* Acciones del panel de inicio */
+.panel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.2rem;
+}
+
+.start.game {
+  background: linear-gradient(135deg, #3ee6a0, #12b981);
+  box-shadow: 0 8px 24px rgba(62, 230, 160, 0.35);
+}
+
+.start.game:hover {
+  box-shadow: 0 12px 30px rgba(62, 230, 160, 0.55);
+}
+
+.start.ghost {
+  background: transparent;
+  color: #aac8ff;
+  border: 1px solid rgba(143, 180, 255, 0.45);
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.start.ghost:hover {
+  background: rgba(143, 180, 255, 0.12);
+}
+
+/* Estadísticas finales */
+.final-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin: 1.2rem 0 1.6rem;
+}
+
+.final-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.final-stat span {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #8fa2c8;
+}
+
+.final-stat strong {
+  font-size: 2.4rem;
+  color: #3ee6a0;
+}
+
+/* HUD del juego */
+.hud-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hud-stats span {
+  background: rgba(20, 26, 40, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.hud-stats .hearts {
+  color: #ff9a9a;
+  letter-spacing: 0.18em;
+}
+
+/* Burbuja del asistente (encima de la cabeza de Zuppy) */
+.assistant-3d {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, calc(-100% - 0.9rem));
+  max-width: 300px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  background: rgba(12, 17, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-left: 3px solid #3ee6a0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  color: #e6eefb;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  pointer-events: none;
+  z-index: 8;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.assistant-3d::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  transform: translateX(-50%);
+  border: 9px solid transparent;
+  border-top-color: rgba(12, 17, 28, 0.92);
+}
+
+.assistant-3d.hidden {
+  display: none;
+}
+
+.assistant-3d p {
+  margin: 0;
+}
+
+.assistant-3d .assistant-badge {
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: #0d1220;
+  background: #3ee6a0;
+  border-radius: 6px;
+  padding: 0.3rem 0.55rem;
+  margin-top: 0.1rem;
 }

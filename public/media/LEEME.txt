@@ -1,4 +1,4 @@
-Coloca aqui tu video final del proyecto Zupply como: presentacion.mp4
+Coloca aqui tu video final del proyecto Xupply como: presentacion.mp4
 (public/media/presentacion.mp4) y recarga la pagina.
 
 Formatos soportados por el navegador: .mp4 (h264+aac) recomendado.

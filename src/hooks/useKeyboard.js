@@ -9,12 +9,13 @@ const BINDINGS = {
   ArrowDown: 'backward',
   ArrowLeft: 'left',
   ArrowRight: 'right',
+  Space: 'jump',
   ShiftLeft: 'shift',
   ShiftRight: 'shift',
 }
 
 export function useKeyboard() {
-  const keys = useRef({ forward: false, backward: false, left: false, right: false, shift: false })
+  const keys = useRef({ forward: false, backward: false, left: false, right: false, shift: false, jump: false })
 
   useEffect(() => {
     const down = (e) => {

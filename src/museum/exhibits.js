@@ -1,11 +1,11 @@
-export const REPO_URL = 'https://github.com/JuanBerro-back/zupply-D'
+export const REPO_URL = 'https://github.com/JuanBerro-back/xupply-D'
 export const AUTHOR = 'Juan Berro'
 
 export const EXHIBITS = [
   {
     id: 'intro',
     num: '01',
-    title: '¿Qué es Zupply?',
+    title: '¿Qué es Xupply?',
     subtitle: 'B2B ERP · Ecosistema logístico',
     accent: '#5aa9ff',
     body: [
@@ -14,11 +14,11 @@ export const EXHIBITS = [
       'en Bucaramanga · Colombia',
     ],
     details: {
-      lead: 'Zupply es un sistema ERP B2B y ecosistema logístico orientado al sector gastronómico.',
+      lead: 'Xupply es un sistema ERP B2B y ecosistema logístico orientado al sector gastronómico.',
       paragraphs: [
         'Conecta restaurantes y proveedores mayoristas de gastronomía en Bucaramanga, Colombia, digitalizando el abastecimiento de principio a fin.',
         'Reúne módulos de ventas, inventario, facturación, contabilidad, logística con seguimiento GPS e inteligencia artificial.',
-        'Es un proyecto en construcción: el código avanza por fases mediante ramas y Pull Requests (github.com/JuanBerro-back/zupply-D).',
+        'Es un proyecto en construcción: el código avanza por fases mediante ramas y Pull Requests (github.com/JuanBerro-back/xupply-D).',
       ],
     },
   },
@@ -30,7 +30,7 @@ export const EXHIBITS = [
     accent: '#6ee7b7',
     body: ['Ventas · Inventario', 'Facturación · Contabilidad', 'Logística GPS · Inteligencia artificial'],
     details: {
-      lead: 'Seis módulos integran el ecosistema Zupply.',
+      lead: 'Seis módulos integran el ecosistema Xupply.',
       paragraphs: [
         'Ventas y pedidos entre restaurantes y proveedores, con estados y seguimiento completo.',
         'Inventario en tiempo real y predicciones de stock para evitar faltantes.',
@@ -48,7 +48,7 @@ export const EXHIBITS = [
     accent: '#f6c453',
     body: ['Página web demostrativa', 'Vite · React · TypeScript · Tailwind'],
     details: {
-      lead: 'Una landing moderna que presenta Zupply al público y a inversionistas.',
+      lead: 'Una landing moderna que presenta Xupply al público y a inversionistas.',
       paragraphs: [
         'Página única con hero, beneficios, sección "cómo funciona", planes, CTA y footer.',
         'Diseño responsive para móvil, tablet y escritorio, con modo claro y oscuro.',
@@ -65,7 +65,7 @@ export const EXHIBITS = [
     accent: '#8f7bff',
     body: ['API Express + TypeScript', 'Autenticación JWT + bcrypt', 'Con PostgreSQL'],
     details: {
-      lead: 'Backend que expone la API REST de Zupply con autenticación segura.',
+      lead: 'Backend que expone la API REST de Xupply con autenticación segura.',
       paragraphs: [
         'Servidor Express + TypeScript con endpoint /health.',
         'Registro y login con JWT, contraseñas hasheadas con bcrypt.',
@@ -117,7 +117,7 @@ export const EXHIBITS = [
     accent: '#73d97a',
     body: ['Una fase = una rama = un PR', 'Revisión antes de mergear'],
     details: {
-      lead: 'Cómo se construye Zupply de forma incremental y colaborativa.',
+      lead: 'Cómo se construye Xupply de forma incremental y colaborativa.',
       paragraphs: [
         'Cada fase se desarrolla en una rama propia y se integra mediante Pull Requests contra main.',
         'Reglas: no mezclar fases en el mismo PR y ejecutar npm run typecheck antes de mergear.',
@@ -134,7 +134,7 @@ export const EXHIBITS = [
     accent: '#ffb860',
     body: ['El cierre del recorrido', 'Reproduce el video con sonido'],
     details: {
-      lead: 'El gran final del museo: el video de presentación de Zupply.',
+      lead: 'El gran final del museo: el video de presentación de Xupply.',
       paragraphs: [
         'Selecciona la pantalla y pulsa reproducir para verlo con sonido.',
         'Para poner tu propio video, añade el archivo en public/media/presentacion.mp4 (o cualquier formato soportado) y recarga.',
@@ -143,7 +143,7 @@ export const EXHIBITS = [
     },
     video: {
       src: '/media/presentacion.mp4',
-      caption: 'Video de presentación de Zupply',
+      caption: 'Video de presentación de Xupply',
     },
   },
 ]

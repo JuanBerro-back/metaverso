@@ -51,10 +51,12 @@ export function Interaction() {
     const onClick = (e) => {
       if (e.button !== 0) return
       if (!document.pointerLockElement) return
+      const st = useStore.getState()
+      if (st.viewing) return
       const id = hoverId.current
       if (!id) return
-      const { viewing } = useStore.getState()
-      setViewing(viewing === id ? null : id)
+      st.setViewing(id)
+      document.exitPointerLock()
     }
     document.addEventListener('mousedown', onClick)
     return () => document.removeEventListener('mousedown', onClick)

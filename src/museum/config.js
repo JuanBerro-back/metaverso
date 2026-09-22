@@ -31,3 +31,11 @@ export const BENCH_COLLIDERS = [
 ]
 
 export const ALL_COLLIDERS = [...PANEL_COLLIDERS, ...COLUMN_COLLIDERS, ...BENCH_COLLIDERS]
+
+export const GAME_COLLIDERS = [
+  { x: 0, z: 0, hw: 8.1, hd: 0.85 },
+  { x: -7.4, z: -4.2, hw: 0.55, hd: 0.55 },
+  { x: -4.0, z: -7.8, hw: 0.55, hd: 0.55 },
+  { x: -0.6, z: -4.2, hw: 0.55, hd: 0.55 },
+  ...COLUMN_COLLIDERS,
+]

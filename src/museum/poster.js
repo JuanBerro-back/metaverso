@@ -73,7 +73,7 @@ function paintPoster(canvas, { num, title, subtitle, body, accent }) {
   ctx.fillStyle = '#0e1424'
   ctx.font = `700 40px ${FONT}`
   ctx.textAlign = 'left'
-  ctx.fillText('Z U P P L Y · M U S E O', 52, 64)
+  ctx.fillText('X U P P L Y · M U S E O', 52, 64)
   ctx.restore()
 
   // Chip con número
@@ -131,7 +131,7 @@ function paintPoster(canvas, { num, title, subtitle, body, accent }) {
   // Pie
   ctx.font = `500 28px ${FONT}`
   ctx.fillStyle = 'rgba(255,255,255,0.55)'
-  ctx.fillText('github.com/JuanBerro-back/zupply-D', 52, H - 44)
+  ctx.fillText('github.com/JuanBerro-back/xupply-D', 52, H - 44)
   ctx.fillStyle = accent
   ctx.textAlign = 'right'
   ctx.font = `600 28px ${FONT}`
@@ -161,7 +161,7 @@ export function makePoster({ num, title, subtitle, body, accent = '#5aa9ff' }) {
     ctx.fillStyle = '#ffffff'
     ctx.font = `700 56px ${FONT}`
     ctx.textAlign = 'left'
-    ctx.fillText(title || 'ZUPLY', 52, 180)
+    ctx.fillText(title || 'XUPPY', 52, 180)
   }
   return makeCanvasTexture(canvas)
 }
@@ -200,7 +200,7 @@ function paintBanner(canvas) {
   ctx.fillStyle = '#ffffff'
   ctx.shadowColor = 'rgba(90,169,255,0.6)'
   ctx.shadowBlur = 40
-  ctx.fillText('ZUPLY', W / 2, 360)
+  ctx.fillText('XUPPY', W / 2, 360)
   ctx.shadowBlur = 0
   ctx.font = `italic 500 76px ${FONT}`
   ctx.fillStyle = '#8fb4ff'
@@ -209,7 +209,7 @@ function paintBanner(canvas) {
   ctx.fillStyle = 'rgba(255,255,255,0.75)'
   ctx.fillText('Restaurantes · Proveedores mayoristas · Bucaramanga, Colombia', W / 2, 576)
   ctx.fillStyle = '#5aa9ff'
-  ctx.fillText('github.com/JuanBerro-back/zupply-D', W / 2, 692)
+  ctx.fillText('github.com/JuanBerro-back/xupply-D', W / 2, 692)
   ctx.restore()
 }
 

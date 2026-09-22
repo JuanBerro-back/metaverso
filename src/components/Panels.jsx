@@ -8,7 +8,14 @@ import { REGISTRY } from '../museum/registry.js'
 function usePosterMaterial(exhibit) {
   const texture = useMemo(() => makePoster(exhibit), [exhibit])
   const material = useMemo(
-    () => new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }),
+    () =>
+      new THREE.MeshBasicMaterial({
+        map: texture,
+        toneMapped: false,
+        side: THREE.DoubleSide,
+        polygonOffset: true,
+        polygonOffsetFactor: 1
+      }),
     [texture]
   )
   return material
@@ -52,8 +59,8 @@ function Poster({ exhibit, spot }) {
         <meshStandardMaterial color="#0e1119" roughness={0.4} metalness={0.35} />
       </mesh>
 
-      {/* Póster */}
-      <mesh ref={planeRef} position={[0, 2.35, 0.115]} material={material}>
+      {/* Póster — separado del marco para evitar z-fighting */}
+      <mesh ref={planeRef} position={[0, 2.35, 0.15]} material={material}>
         <planeGeometry args={[2.95, 2.2]} />
       </mesh>
     </group>
