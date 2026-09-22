@@ -15,6 +15,44 @@ const FRINGE = Array.from({ length: 10 }, (_, i) => {
   return [Math.cos(a) * 0.41, Math.sin(a) * 0.41]
 })
 
+const BURGY = {
+  idle: [
+    '¡Ñam! Hoy el metaverso huele a papitas.',
+    'Soy Burgy, la hamburguesa voladora de Xupply.',
+    '¿Vacaciones en el museo? ¡Me apunto!',
+    'Cuidado con la mantequilla, el piso es de queso.',
+    'Mi platito rosa es la mejor nave del espacio.',
+  ],
+  near: [
+    '¡Hola, amiguito! Soy Burgy. Y eso es todo amigos… digo, es todo.',
+    'Si el gato-ovni me persigue, hazle clic para calmarlo.',
+    'Pásame la salsa y seremos inseparables.',
+    '¿Viste qué lindo es mi platito volador? ¡Vuela solo!',
+  ],
+  scared: [
+    '¡Ay, no! ¡El gato-ovni me quiere comer!',
+    '¡Socorrooo! ¡Que alguien le dé un clic!',
+    '¡Uy, mejor aprieto el turbo del OVNI!',
+    '¡Cucu agua fresca! Sin ketchup, por favor.',
+  ],
+  bitten: [
+    '¡Ayyy! ¡El travieso me dio un mordisco!',
+    '¡Ouch! Eso estuvo cerca de ser almuerzo.',
+    '¡Ño! ¡Me mordió el gato hambriento!',
+  ],
+  friends: [
+    '¡Uf! Menos mal, somos amigos otra vez.',
+    '¡Así me gusta! Amigos, no merienda.',
+    '¡No más mordiscos, por favor!',
+    '¡Corazones! Qué lindo es el gato… desde lejos.',
+  ],
+}
+
+function pick(lines, exclude) {
+  const pool = lines.filter((l) => l !== exclude)
+  return pool[Math.floor(Math.random() * pool.length)] ?? lines[0]
+}
+
 function clamp(v, min, max) {
   return Math.min(max, Math.max(min, v))
 }
@@ -56,7 +94,14 @@ export function KawaiiHamburger({ position = [0, 0, 0] }) {
   const hopY = useRef(0)
   const heartTimer = useRef(0)
   const hearts = useRef([])
+  const bubbleApi = useRef(null)
+  const prevScared = useRef(false)
+  const prevFriends = useRef(false)
+  const prevBiting = useRef(false)
+  const lastSpeak = useRef(-Infinity)
+  const lastText = useRef(null)
   const _dc = new THREE.Vector3()
+  const _proj = new THREE.Vector3()
 
   useEffect(() => {
     const g = root.current
@@ -65,6 +110,23 @@ export function KawaiiHamburger({ position = [0, 0, 0] }) {
     burgerState.x = position[0]
     burgerState.z = position[2]
   }, [position])
+
+  useEffect(() => {
+    const el = document.createElement('div')
+    el.className = 'assistant assistant-3d burger hidden'
+    const badge = document.createElement('span')
+    badge.className = 'assistant-badge'
+    badge.textContent = 'BURGY'
+    const p = document.createElement('p')
+    el.appendChild(badge)
+    el.appendChild(p)
+    document.body.appendChild(el)
+    bubbleApi.current = { el, p }
+    return () => {
+      el.remove()
+      bubbleApi.current = null
+    }
+  }, [])
 
   useFrame((state, delta) => {
     const g = root.current
@@ -195,6 +257,48 @@ export function KawaiiHamburger({ position = [0, 0, 0] }) {
           h.base.set((Math.random() - 0.5) * 0.4, 0.95 + Math.random() * 0.15, (Math.random() - 0.5) * 0.3)
           h.mesh.visible = true
         }
+      }
+    }
+
+    // ===== Diálogos de Burgy (burbuja) =====
+    const bubble = bubbleApi.current
+    if (bubble) {
+      const now = performance.now()
+      const biting = catState.biting && d < 2.6
+      const toCam = g.position.distanceTo(state.camera.position)
+      let text = null
+
+      if (!prevBiting.current && biting) {
+        text = pick(BURGY.bitten, lastText.current)
+      } else if (!prevScared.current && scared) {
+        text = pick(BURGY.scared, lastText.current)
+      } else if (!prevFriends.current && friends) {
+        text = pick(BURGY.friends, lastText.current)
+      } else if (now - lastSpeak.current > 5500) {
+        if (scared) text = pick(BURGY.scared, lastText.current)
+        else if (friends) text = pick(BURGY.friends, lastText.current)
+        else if (toCam < 4.5) text = pick(BURGY.near, lastText.current)
+        else text = pick(BURGY.idle, lastText.current)
+      }
+
+      prevScared.current = scared
+      prevFriends.current = friends
+      prevBiting.current = biting
+
+      if (text) {
+        lastSpeak.current = now
+        lastText.current = text
+        bubble.p.textContent = text
+        _proj.copy(g.position).add(0, 1.05, 0).project(state.camera)
+        if (_proj.z < 1) {
+          bubble.el.style.left = `${(_proj.x * 0.5 + 0.5) * window.innerWidth}px`
+          bubble.el.style.top = `${(-_proj.y * 0.5 + 0.5) * window.innerHeight}px`
+          bubble.el.classList.remove('hidden')
+        } else {
+          bubble.el.classList.add('hidden')
+        }
+      } else {
+        bubble.el.classList.add('hidden')
       }
     }
   })

@@ -4,6 +4,91 @@
   box-sizing: border-box;
 }
 
+/* ===== Pantalla de carga ===== */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0a0e17;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.loading-screen .loading-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(10, 14, 23, 0.25), rgba(10, 14, 23, 0.8));
+}
+
+.loading-body {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+.loading-badge {
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  font-size: 1rem;
+  color: #0d1220;
+  background: #3ee6a0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+}
+
+.loading-title {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.65);
+}
+
+.loading-sub {
+  margin: 0;
+  font-size: 0.92rem;
+  max-width: 340px;
+  opacity: 0.92;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.loading-spinner {
+  width: 38px;
+  height: 38px;
+  margin-top: 0.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ff7bd0;
+  border-right-color: #3ee6a0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 html,
 body,
 #root {
@@ -504,4 +589,14 @@ kbd {
   border-radius: 6px;
   padding: 0.3rem 0.55rem;
   margin-top: 0.1rem;
+}
+
+/* Burbuja de la hamburguesa (Burgy) */
+.assistant-3d.burger {
+  border-left-color: #ff7bd0;
+}
+
+.assistant-3d.burger .assistant-badge {
+  background: #ff7bd0;
+  color: #3d0b24;
 }
