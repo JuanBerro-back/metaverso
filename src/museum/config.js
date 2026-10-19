@@ -32,6 +32,40 @@ export const BENCH_COLLIDERS = [
 
 export const ALL_COLLIDERS = [...PANEL_COLLIDERS, ...COLUMN_COLLIDERS, ...BENCH_COLLIDERS]
 
+/* ------------------------------------------------------------------ *
+ * Estaciones del Museo Xupply (4 módulos explicativos)                *
+ * Se colocan en el anillo exterior, sobre las diagonales, para que    *
+ * el visitante recorra el museo de estación en estación.              *
+ * ------------------------------------------------------------------ */
+
+export const STATION_RADIUS = 9.6
+
+const STATION_ANGLES = [Math.PI / 4, (3 * Math.PI) / 4, (5 * Math.PI) / 4, (7 * Math.PI) / 4]
+
+/** Posición y orientación de la estación `i` (0..3). Mira siempre al centro. */
+export function stationSpot(i) {
+  const angle = STATION_ANGLES[i % STATION_ANGLES.length]
+  const x = Math.sin(angle) * STATION_RADIUS
+  const z = Math.cos(angle) * STATION_RADIUS
+  return {
+    x,
+    z,
+    angle,
+    rotationY: Math.PI + angle,
+    // Punto de pie frente a la estación: donde se teletransporta el recorrido.
+    standX: Math.sin(angle) * (STATION_RADIUS - 3.1),
+    standZ: Math.cos(angle) * (STATION_RADIUS - 3.1),
+  }
+}
+
+export const STATION_COLLIDERS = Array.from({ length: 4 }, (_, i) => {
+  const s = stationSpot(i)
+  return { x: s.x, z: s.z, hw: 1.7, hd: 1.1 }
+})
+
+/** Colisionadores del modo museo (incluye estaciones). */
+export const MUSEUM_COLLIDERS = [...ALL_COLLIDERS, ...STATION_COLLIDERS]
+
 export const GAME_COLLIDERS = [
   { x: 0, z: 0, hw: 8.1, hd: 0.85 },
   { x: -7.4, z: -4.2, hw: 0.55, hd: 0.55 },

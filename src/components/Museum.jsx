@@ -68,7 +68,7 @@ function Banner() {
   )
 }
 
-export function Museum() {
+export function Museum({ detail = true }) {
   const floorTexture = useMemo(() => {
     const t = makeFloorTexture()
     t.repeat.set(6, 6)
@@ -115,12 +115,13 @@ export function Museum() {
         <boxGeometry args={[FULL + 0.6, 0.35, FULL + 0.6]} />
         <meshStandardMaterial color="#1a1f2e" roughness={1} />
       </mesh>
-      {[-6, -2, 2, 6].map((x) => (
-        <mesh key={x} position={[x, WALL_H - 0.1, 0]}>
-          <planeGeometry args={[1.1, 9.5]} />
-          <meshBasicMaterial color="#ffe9c4" />
-        </mesh>
-      ))}
+      {detail &&
+        [-6, -2, 2, 6].map((x) => (
+          <mesh key={x} position={[x, WALL_H - 0.1, 0]}>
+            <planeGeometry args={[1.1, 9.5]} />
+            <meshBasicMaterial color="#ffe9c4" />
+          </mesh>
+        ))}
 
       {/* Banner de bienvenida */}
       <Banner />
@@ -161,14 +162,15 @@ export function Museum() {
         shadow-bias={-0.0002}
       />
       <pointLight position={[0, 5.4, 0]} intensity={55} distance={26} decay={2} color="#fff1d6" />
-      {[
-        [8, 5.2, 6],
-        [-8, 5.2, 6],
-        [8, 5.2, -6],
-        [-8, 5.2, -6],
-      ].map(([x, y, z], i) => (
-        <pointLight key={i} position={[x, y, z]} intensity={26} distance={22} decay={2} color="#ffffff" />
-      ))}
+      {detail &&
+        [
+          [8, 5.2, 6],
+          [-8, 5.2, 6],
+          [8, 5.2, -6],
+          [-8, 5.2, -6],
+        ].map(([x, y, z], i) => (
+          <pointLight key={i} position={[x, y, z]} intensity={26} distance={22} decay={2} color="#ffffff" />
+        ))}
     </group>
   )
 }

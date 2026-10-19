@@ -2,11 +2,65 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metaverso Xupply</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0e17" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e17'/%3E%3Cpath d='M8 9l8 14 8-14' fill='none' stroke='%233ee6a0' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="Metaverso explicativo de Xupply: recorrido guiado por los módulos del ecosistema logístico B2B para restaurantes. Vite + Three.js, con modo WebXR opcional. Modo demostración local."
+    />
+    <title>Metaverso Xupply · recorrido explicativo</title>
   </head>
   <body>
     <div id="root"></div>
+
+    <noscript>
+      <div style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; background: #0a0e17; color: #e8eefc; font-family: system-ui, sans-serif; text-align: center">
+        <div>
+          <h1 style="font-size: 22px; margin: 0 0 12px">El metaverso de Xupply necesita JavaScript</h1>
+          <p style="max-width: 520px; line-height: 1.6; color: #c3cee4">
+            Activa JavaScript en tu navegador y vuelve a cargar la página para recorrer el museo interactivo.
+          </p>
+        </div>
+      </div>
+    </noscript>
+
+    <!--
+      Red de seguridad de arranque (sin dependencias).
+      Si el bundle no llega a montar la aplicación en 15 s (red caída, fichero
+      no encontrado, error de sintaxis), mostramos un aviso claro en lugar de
+      dejar la pantalla en blanco. La app marca window.__XUPPLY_MOUNTED__ = true
+      en cuanto React queda montado.
+    -->
+    <script>
+      ;(function () {
+        function aviso() {
+          var root = document.getElementById('root')
+          if (!root || window.__XUPPLY_MOUNTED__) return
+          root.innerHTML =
+            '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;' +
+            'background:radial-gradient(circle at 50% 0%,#182338 0%,#0a0e17 60%);color:#e8eefc;' +
+            'font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;text-align:center">' +
+            '<div style="max-width:520px"><p style="margin:0 0 10px;font-size:12px;letter-spacing:.16em;' +
+            'text-transform:uppercase;color:#7fb2ff">Xupply · Metaverso</p>' +
+            '<h1 style="margin:0 0 12px;font-size:22px;line-height:1.3">El metaverso no ha podido cargar</h1>' +
+            '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#c3cee4">Puede ser un problema de red ' +
+            'o una versión antigua en caché. Reintenta con una recarga completa.</p>' +
+            '<button type="button" onclick="window.location.reload()" style="min-height:48px;padding:12px 22px;' +
+            'border-radius:12px;border:0;cursor:pointer;font-size:15px;font-weight:700;' +
+            'background:linear-gradient(135deg,#4f9dff,#2b6fe0);color:#04101f">Reintentar</button></div></div>'
+        }
+        setTimeout(aviso, 15000)
+        window.addEventListener('error', function (e) {
+          if (window.__XUPPLY_MOUNTED__) return
+          if (e && e.target && e.target.tagName === 'SCRIPT') setTimeout(aviso, 100)
+        }, true)
+      })()
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

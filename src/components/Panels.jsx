@@ -30,12 +30,13 @@ function Poster({ exhibit, spot }) {
     if (planeRef.current) {
       planeRef.current.userData.id = exhibit.id
       planeRef.current.userData.title = exhibit.title
+      planeRef.current.userData.interact = { id: exhibit.id, kind: 'poster', title: exhibit.title }
       REGISTRY.set(exhibit.id, planeRef.current)
     }
     return () => {
       REGISTRY.delete(exhibit.id)
     }
-  }, [exhibit.id])
+  }, [exhibit.id, exhibit.title])
 
   return (
     <group position={[spot.x, 0, spot.z]} rotation={[0, spot.rotationY, 0]}>

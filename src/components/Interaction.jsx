@@ -1,66 +1,131 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { REGISTRY } from '../museum/registry.js'
+import { REGISTRY, STATION_REGISTRY, NPC_REGISTRY } from '../museum/registry.js'
 import { EXHIBIT_MAP, EXHIBITS } from '../museum/exhibits.js'
 import { useStore } from '../store.js'
+import { touchInput } from '../player/input.js'
 
 const MAX_DISTANCE = 9
-const WHITE = new THREE.Color('#ffffff')
 
+/** Color de acento por cartel, para el resaltado. */
 const ACCENT = {}
-for (const e of EXHIBITS) ACCENT[e.id] = new THREE.Color(e.accent)
+for (const e of EXHIBITS) ACCENT[`poster:${e.id}`] = new THREE.Color(e.accent || '#5aa9ff')
 
+/** Materiales cuyo color base es blanco: se pueden teñir sin estropear la textura. */
+const TINTABLES = new Set(['poster', 'station'])
+
+function promptFor(info) {
+  if (!info) return null
+  if (info.kind === 'station') return `E · abrir la estación ${info.title}`
+  if (info.kind === 'poster') return `E · leer el cartel «${info.title}»`
+  return `E · hablar con ${info.title}`
+}
+
+/**
+ * Interacción por rayo.
+ *
+ * Mira desde la cámara hacia el centro de la pantalla y detecta carteles,
+ * estaciones del museo Xupply y personajes. Ofrece resaltado, pista contextual
+ * y apertura con la tecla E, con clic (ratón capturado) o con el botón táctil.
+ */
 export function Interaction() {
   const { camera } = useThree()
   const raycaster = useRef(new THREE.Raycaster()).current
-  const hoverId = useRef(null)
+  const hover = useRef(null)
+  const tinted = useRef(null)
 
   const setTarget = useStore((s) => s.setTarget)
-  const setViewing = useStore((s) => s.setViewing)
+  const setPrompt = useStore((s) => s.setPrompt)
+
+  /** Abre lo que esté enfocado ahora mismo. */
+  const abrir = () => {
+    const st = useStore.getState()
+    if (st.view !== 'world' || st.viewing || st.station) return
+    const h = hover.current
+    if (!h) return
+
+    if (h.kind === 'station') st.setStation(h.id)
+    else if (h.kind === 'poster') st.setViewing(h.id)
+    else if (h.kind === 'npc') st.setAssistant(h.line || '¡Hola! Soy un visitante de demostración.')
+  }
+
+  // Tecla E: interactuar.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.repeat) return
+      if (e.code === 'KeyE') {
+        e.preventDefault()
+        abrir()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // Clic con el ratón capturado dentro del museo.
+  useEffect(() => {
+    const onDown = (e) => {
+      if (e.button !== 0) return
+      const st = useStore.getState()
+      if (st.mode !== 'museum') return
+      if (!document.pointerLockElement) return
+      abrir()
+    }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [])
 
   useFrame((_, delta) => {
-    const meshes = [...REGISTRY.values()]
-    if (meshes.length) {
-      raycaster.setFromCamera({ x: 0, y: 0 }, camera)
-      const hits = raycaster.intersectObjects(meshes, false)
-      let id = null
-      for (const hit of hits) {
-        if (hit.distance <= MAX_DISTANCE) {
-          id = hit.object.userData.id || null
-          break
+    const st = useStore.getState()
+    const activo = st.view === 'world' && !st.viewing && !st.station
+
+    // Botón táctil equivalente a la tecla E.
+    if (touchInput.interact) {
+      touchInput.interact = false
+      abrir()
+    }
+
+    let encontrado = null
+
+    if (activo) {
+      const meshList = [...REGISTRY.values(), ...STATION_REGISTRY.values(), ...NPC_REGISTRY.values()]
+      if (meshList.length) {
+        raycaster.setFromCamera({ x: 0, y: 0 }, camera)
+        raycaster.far = MAX_DISTANCE
+        const hits = raycaster.intersectObjects(meshList, false)
+        for (const hit of hits) {
+          if (hit.distance > MAX_DISTANCE) continue
+          const info = hit.object.userData.interact
+          if (info) {
+            encontrado = { ...info, mesh: hit.object, distance: hit.distance }
+            break
+          }
         }
       }
+    }
 
-      if (hoverId.current !== id) {
-        hoverId.current = id
-        setTarget(id ? { id, title: EXHIBIT_MAP[id]?.title } : null)
-      }
+    const keyAntes = hover.current?.mesh?.uuid || null
+    const keyAhora = encontrado?.mesh?.uuid || null
+    hover.current = encontrado
 
-      for (const [exId, mesh] of REGISTRY) {
-        const material = mesh.material
-        const base = id === exId ? ACCENT[exId] : WHITE
-        material.color.r = THREE.MathUtils.damp(material.color.r, base.r, 10, delta)
-        material.color.g = THREE.MathUtils.damp(material.color.g, base.g, 10, delta)
-        material.color.b = THREE.MathUtils.damp(material.color.b, base.b, 10, delta)
-      }
+    if (keyAntes !== keyAhora) {
+      setTarget(encontrado ? { id: encontrado.id, kind: encontrado.kind, title: encontrado.title } : null)
+      setPrompt(promptFor(encontrado))
+    }
+
+    /* Resaltado del objeto enfocado (solo carteles y estaciones). */
+    const nuevoMaterial = encontrado && TINTABLES.has(encontrado.kind) ? encontrado.mesh.material : null
+    if (tinted.current && tinted.current !== nuevoMaterial) {
+      tinted.current.color.setRGB(1, 1, 1)
+      tinted.current = null
+    }
+    if (nuevoMaterial?.color) {
+      const accent = encontrado.kind === 'poster' ? ACCENT[`poster:${encontrado.id}`] : new THREE.Color(encontrado.accent || '#5aa9ff')
+      nuevoMaterial.color.lerp(accent, Math.min(1, delta * 8))
+      tinted.current = nuevoMaterial
     }
   })
-
-  useEffect(() => {
-    const onClick = (e) => {
-      if (e.button !== 0) return
-      if (!document.pointerLockElement) return
-      const st = useStore.getState()
-      if (st.viewing) return
-      const id = hoverId.current
-      if (!id) return
-      st.setViewing(id)
-      document.exitPointerLock()
-    }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
-  }, [setViewing])
 
   return null
 }

@@ -383,6 +383,10 @@ export function ZuppyBot({ position }) {
     if (!locked || st.gameOver) return
     if (st.mode !== 'game' && st.mode !== 'museum') return
 
+    // Durante el recorrido guiado manda el narrador del recorrido: Xuppy calla
+    // sus consejos automáticos para no pisar la frase del guía.
+    if (st.tour && st.tour.active) return
+
     tipTimer.current += delta
 
     if (st.mode === 'game') {

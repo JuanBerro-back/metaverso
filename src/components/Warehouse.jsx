@@ -62,7 +62,7 @@ function Mushroom({ position }) {
   )
 }
 
-export function Warehouse() {
+export function Warehouse({ detail = true }) {
   const floorTexture = useMemo(() => {
     const t = makeForestFloor()
     t.repeat.set(4, 4)
@@ -153,14 +153,15 @@ export function Warehouse() {
         shadow-camera-bottom={-18}
         shadow-bias={-0.0002}
       />
-      {[
-        [7, 4.6, 4],
-        [-7, 4.6, 4],
-        [7, 4.6, -4],
-        [-7, 4.6, -4],
-      ].map(([x, y, z], i) => (
-        <pointLight key={i} position={[x, y, z]} intensity={18} distance={18} decay={2} color="#d9f2cf" />
-      ))}
+      {detail &&
+        [
+          [7, 4.6, 4],
+          [-7, 4.6, 4],
+          [7, 4.6, -4],
+          [-7, 4.6, -4],
+        ].map(([x, y, z], i) => (
+          <pointLight key={i} position={[x, y, z]} intensity={18} distance={18} decay={2} color="#d9f2cf" />
+        ))}
     </group>
   )
 }

@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useStore } from '../store.js'
 import { makePortalTexture, makePortalLabel } from '../game/textures.js'
+import { playerState } from '../player/state.js'
 
 export function Portal({ position, to, label, hex = '#3ee6a0', radius = 1.4 }) {
   const swirlRef = useRef(null)
@@ -28,9 +29,10 @@ export function Portal({ position, to, label, hex = '#3ee6a0', radius = 1.4 }) {
     if (!document.pointerLockElement || st.gameOver) return
     if (st.mode !== here) return
 
-    const cam = state.camera.position
-    const dx = cam.x - position[0]
-    const dz = cam.z - position[2]
+    // El portal se activa con la posición del AVATAR (no de la cámara), que en
+    // tercera persona va por delante del punto de vista.
+    const dx = playerState.x - position[0]
+    const dz = playerState.z - position[2]
     if (dx * dx + dz * dz < radius * radius && t - cooldown.current > 1.2) {
       cooldown.current = t
       if (to === 'game') {
