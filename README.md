@@ -60,8 +60,8 @@ vite v5.4.21 building for production...
 ✓ 107 modules transformed.
 dist/index.html                  3.64 kB │ gzip:   1.74 kB
 dist/assets/index-*.css         22.07 kB │ gzip:   5.33 kB
-dist/assets/index-*.js       1,102.07 kB │ gzip: 308.62 kB
-✓ built in ~5 s
+dist/assets/index-*.js       1,102.08 kB │ gzip: 308.62 kB
+✓ built in ~4 s
 ```
 
 El aviso de Rollup sobre *chunks > 500 kB* es esperado: Three.js va en un único paquete. No se añade
