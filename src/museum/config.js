@@ -4,8 +4,21 @@ export const WALL_H = 6
 export const PANEL_RADIUS = 6.8
 export const PANEL_COUNT = 8
 
+/**
+ * Desfase del anillo de carteles del proyecto.
+ *
+ * Las 4 estaciones del museo (M1..M4) se colocan en las diagonales
+ * (45°, 135°, 225° y 315°) y los 8 carteles en un anillo interior.
+ * Sin este desfase, el cartel de cada diagonal quedaba **en la misma línea**
+ * que una estación: dos elementos explicativos en el mismo sitio y, peor
+ * todavía, el punto de pie del recorrido guiado miraba a la trasera del cartel.
+ * Con medio paso de desfase (22,5°) cada cartel queda entre dos estaciones y
+ * cada sección tiene una sola pieza explicativa.
+ */
+export const PANEL_OFFSET = Math.PI / 8
+
 export function panelSpot(i) {
-  const a = (i / PANEL_COUNT) * Math.PI * 2
+  const a = (i / PANEL_COUNT) * Math.PI * 2 + PANEL_OFFSET
   return {
     x: Math.sin(a) * PANEL_RADIUS,
     z: Math.cos(a) * PANEL_RADIUS,
@@ -13,9 +26,17 @@ export function panelSpot(i) {
   }
 }
 
+/**
+ * Colisionadores del anillo de carteles.
+ *
+ * Son cajas alineadas a los ejes (el resolvedor del jugador solo entiende AABB)
+ * y ahora los 8 carteles caen en diagonal, así que se mantiene el fondo `hd`
+ * ajustado: con 1.0 la caja rozaba el punto de pie de las estaciones y el
+ * recorrido guiado empujaba al visitante nada más llegar.
+ */
 export const PANEL_COLLIDERS = Array.from({ length: PANEL_COUNT }, (_, i) => {
   const s = panelSpot(i)
-  return { x: s.x, z: s.z, hw: 1.55, hd: 1.0 }
+  return { x: s.x, z: s.z, hw: 1.55, hd: 0.72 }
 })
 
 export const COLUMN_COLLIDERS = [

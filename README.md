@@ -20,7 +20,7 @@ restaurantes) en un recorrido guiado **en primera persona**, con cuatro estacion
 | --- | --- |
 | **Pantalla de inicio** | Apodo (se guarda localmente), calidad gráfica, botón de VR (solo si hay gafas compatibles) y aviso honesto de demo. |
 | **Cámara y control** | **Primera persona por defecto** (inmersiva), conmutable a 3.ª con `V`; WASD/flechas, correr, saltar y colisiones simples. |
-| **4 estaciones (museo)** | M1 catálogo mayorista · M2 pedidos y seguimiento GPS · M3 inventario y contabilidad · M4 copiloto de IA. Cada una tiene cartel 3D, explicación breve, datos DEMO ficticios y botón de vuelta. |
+| **4 estaciones (museo)** | M1 catálogo mayorista · M2 pedidos y seguimiento GPS · M3 inventario y contabilidad · M4 copiloto de IA. Cada una tiene **un solo cartel** (cabecera con el módulo + explicación breve + datos DEMO ficticios), aro de colocación y botón de vuelta. |
 | **Recorrido guiado** | Barra de progreso, *Siguiente / Anterior / Reiniciar*, «Saltar a módulo», pantalla completa, «Salir» y «Saltar recorrido». Los personajes kawaii (Xuppy el gato-ovni y Burgy la hamburguesa) hacen de guías. |
 | **Experiencia individual** | Sin otros visitantes y sin interacción con nadie: no hay NPC con los que hablar. Ver *Por qué no hay otros visitantes*. |
 | **Minijuego** | Se conserva la banda logística original (clasificar cajas), accesible desde el museo. |
@@ -58,9 +58,9 @@ npm run preview    # sirve dist/ → http://localhost:4173/metaverso/
 ```
 vite v5.4.21 building for production...
 ✓ 107 modules transformed.
-dist/index.html                  3.64 kB │ gzip:   1.74 kB
+dist/index.html                  3.64 kB │ gzip:   1.75 kB
 dist/assets/index-*.css         22.07 kB │ gzip:   5.33 kB
-dist/assets/index-*.js       1,102.08 kB │ gzip: 308.62 kB
+dist/assets/index-*.js       1,102.37 kB │ gzip: 308.66 kB
 ✓ built in ~4 s
 ```
 
@@ -149,6 +149,13 @@ Cada estación (`src/museum/stations.js`) incluye: *pitch*, viñetas, «cómo fu
 datos DEMO ficticios** (tabla + métricas) y el descargo `DEMO_DISCLAIMER`. Los datos son inventados:
 SKUs, precios y pedidos no corresponden a ningún negocio real.
 
+**Un solo cartel por sección.** El lobby combina 8 carteles del proyecto (anillo interior) y 4 estaciones
+M1‑M4 (diagonales). El anillo lleva medio paso de desfase (`PANEL_OFFSET` en `src/museum/config.js`), así
+que ningún cartel queda delante o detrás de una estación: cada sección tiene una única pieza explicativa y
+el recorrido guiado ve la estación despejada. Además, cada estación es **un único cartel** (cabecera con
+número, título y subtítulo + ficha), sin repetir el nombre dos veces: la ficha se dibuja con
+`makeStationSheet(station, { header: false })` y el título va en la cabecera física.
+
 ## 8. Arquitectura y cambios por archivo
 
 ```
@@ -193,10 +200,10 @@ src/
 | `src/components/Interaction.jsx` | Rayo desde la cámara, resaltado, pista contextual y apertura por `E`/clic/botón táctil sobre carteles y estaciones. Sin interacción con personas. |
 | `src/components/TouchControls.jsx` | **Nuevo.** Joystick, arrastre para mirar y botones de acción. |
 | `src/museum/stations.js` | **Nuevo.** Contenido de los 4 módulos + `DEMO_DISCLAIMER`. |
-| `src/museum/config.js` | **Ampliado:** posiciones de las estaciones, colisionadores del museo (incluidas estaciones) y del minijuego. |
-| `src/museum/poster.js` | **Ampliado:** `makeStationSign`, `makeStationSheet` y `makeHelpSheet` (carteles, fichas de módulo y pizarra de ayuda de VR dibujados en canvas, sin imágenes externas). |
+| `src/museum/config.js` | **Ampliado:** posiciones de las estaciones, colisionadores del museo (incluidas estaciones) y del minijuego. El anillo de carteles usa `PANEL_OFFSET = 22,5°` para no cruzarse con las estaciones. |
+| `src/museum/poster.js` | **Ampliado:** `makeStationSign`, `makeStationSheet` (`{ header: false }` omite la banda del título) y `makeHelpSheet` (carteles, fichas de módulo y pizarra de ayuda de VR dibujados en canvas, sin imágenes externas). El subtítulo del cartel se ajusta con `fitFont` para no cortarse. |
 | `src/museum/registry.js` | **Ampliado:** registros de carteles y estaciones para el raycast (el de NPC se retiró al quitar los visitantes). |
-| `src/components/Stations.jsx` | **Nuevo.** Cuatro kioscos 3D con pantalla, cartel, aro de colocación y luz de acento. |
+| `src/components/Stations.jsx` | **Nuevo.** Cuatro kioscos 3D, cada uno con **un único cartel** (cabecera + ficha), aro de colocación y luz de acento. |
 | `src/components/StationPanel.jsx` | **Nuevo.** Ficha lateral del módulo con datos DEMO, navegación y cierre. |
 | `src/components/TourHud.jsx` | **Nuevo.** Barra del recorrido guiado (progreso, navegación, salto a módulo, pantalla completa). |
 | `src/tour/steps.js` | **Nuevo.** Los 6 pasos del recorrido y utilidades. |

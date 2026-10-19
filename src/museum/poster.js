@@ -299,7 +299,9 @@ export function makeStationSign({ num, title, subtitle, accent = '#5aa9ff' }) {
     ctx.fillStyle = '#ffffff'
     ctx.fillText(title, 236, 118)
 
-    ctx.font = `500 34px ${FONT}`
+    // Subtítulo: se ajusta al ancho disponible para que no se corte
+    const subSize = fitFont(ctx, subtitle || '', W - 238 - 40, 34, 500)
+    ctx.font = `500 ${subSize}px ${FONT}`
     ctx.fillStyle = '#b9c6e2'
     ctx.fillText(subtitle || '', 238, 176)
 
@@ -315,9 +317,15 @@ export function makeStationSign({ num, title, subtitle, accent = '#5aa9ff' }) {
 
 /**
  * Ficha grande de la estación: explicación + datos DEMO.
- * Se usa en el panel HTML de superposición y en la pizarra 3D dentro de VR.
+ *
+ * Se usa en el panel HTML de superposición, en la pizarra 3D dentro de VR y en
+ * la pantalla de cada estación del museo.
+ *
+ * `header: false` omite la banda superior con el número y el título: la usa la
+ * estación del museo, que ya lleva ese título en su cabecera física, para que
+ * el módulo tenga **un solo cartel** y no repita el nombre dos veces.
  */
-export function makeStationSheet(station) {
+export function makeStationSheet(station, { header = true } = {}) {
   const W = 1024
   const H = 768
   const canvas = document.createElement('canvas')
@@ -336,18 +344,21 @@ export function makeStationSheet(station) {
     ctx.fillStyle = bg
     ctx.fillRect(0, 0, W, H)
 
-    // Cabecera
-    ctx.fillStyle = accent
-    ctx.fillRect(0, 0, W, 92)
-    ctx.fillStyle = '#0b1020'
-    ctx.font = `800 44px ${FONT}`
-    ctx.textAlign = 'left'
-    ctx.fillText(`${station?.num || ''} · ${String(station?.title || '').toUpperCase()}`, 44, 62)
+    // Cabecera (solo si se pide: número de módulo + título)
+    if (header) {
+      ctx.fillStyle = accent
+      ctx.fillRect(0, 0, W, 92)
+      ctx.fillStyle = '#0b1020'
+      ctx.font = `800 44px ${FONT}`
+      ctx.textAlign = 'left'
+      ctx.fillText(`${station?.num || ''} · ${String(station?.title || '').toUpperCase()}`, 44, 62)
+    }
 
     // Entradilla
+    ctx.textAlign = 'left'
     ctx.fillStyle = '#ffffff'
     ctx.font = `700 40px ${FONT}`
-    const y0 = 150
+    const y0 = header ? 150 : 74
     const lead = wrapLines(ctx, station?.pitch || '', W - 88)
     let y = y0
     for (const line of lead.slice(0, 3)) {

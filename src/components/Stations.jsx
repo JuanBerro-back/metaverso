@@ -7,7 +7,9 @@ import { STATION_REGISTRY } from '../museum/registry.js'
 
 /** Material de ficha reutilizable (DoubleSide para no perderlo de vista). */
 function makeSheetMaterial(station) {
-  const texture = makeStationSheet(station)
+  // Sin cabecera: el título va en la cabecera física del propio cartel, así el
+  // módulo no repite el nombre dos veces (ver el grupo del cartel más abajo).
+  const texture = makeStationSheet(station, { header: false })
   return new THREE.MeshBasicMaterial({
     map: texture,
     toneMapped: false,
@@ -62,8 +64,9 @@ function Station({ station, index }) {
         <meshStandardMaterial color="#242a3a" roughness={0.7} />
       </mesh>
 
-      {/* Pantalla inclinada con la ficha del módulo */}
+      {/* Un solo cartel por estación: cabecera con el título + ficha del módulo */}
       <group position={[0, 1.08, 0.12]} rotation={[-0.28, 0, 0]}>
+        {/* Ficha */}
         <mesh position={[0, 0, -0.06]} castShadow receiveShadow>
           <boxGeometry args={[2.75, 1.72, 0.1]} />
           <meshStandardMaterial color="#12161f" roughness={0.5} metalness={0.2} />
@@ -81,16 +84,24 @@ function Station({ station, index }) {
         <mesh ref={screenRef} position={[0, 0, 0.05]} material={sheetMaterial}>
           <planeGeometry args={[2.6, 1.6]} />
         </mesh>
-      </group>
 
-      {/* Cartel 3D del módulo */}
-      <group position={[0, 2.72, -0.1]}>
-        <mesh position={[0, 0, -0.08]} castShadow>
-          <boxGeometry args={[3.2, 0.9, 0.14]} />
-          <meshStandardMaterial color="#10141f" roughness={0.7} />
+        {/* Cabecera del mismo cartel (número, título y subtítulo del módulo) */}
+        <mesh position={[0, 1.36, -0.06]} castShadow>
+          <boxGeometry args={[2.75, 0.75, 0.1]} />
+          <meshStandardMaterial color="#12161f" roughness={0.5} metalness={0.2} />
         </mesh>
-        <mesh ref={signRef} position={[0, 0, 0.01]}>
-          <planeGeometry args={[3.05, 0.76]} />
+        <mesh position={[0, 1.36, 0.01]}>
+          <boxGeometry args={[2.95, 0.85, 0.05]} />
+          <meshStandardMaterial
+            color={station.accent}
+            emissive={station.accent}
+            emissiveIntensity={0.25}
+            roughness={0.4}
+            metalness={0.3}
+          />
+        </mesh>
+        <mesh ref={signRef} position={[0, 1.36, 0.05]}>
+          <planeGeometry args={[2.6, 0.65]} />
           <meshBasicMaterial map={signTexture} toneMapped={false} side={THREE.DoubleSide} />
         </mesh>
       </group>
