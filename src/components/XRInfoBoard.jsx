@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { makePoster, makeStationSheet } from '../museum/poster.js'
+import { makePoster, makeStationSheet, makeHelpSheet } from '../museum/poster.js'
 import { STATION_MAP } from '../museum/stations.js'
 import { EXHIBIT_MAP } from '../museum/exhibits.js'
 import { useStore } from '../store.js'
@@ -17,7 +17,8 @@ const _forward = new THREE.Vector3()
  *
  * Los paneles HTML (ficha de la estación, carteles del museo) no existen en el
  * espacio inmersivo, así que la información se pinta en un lienzo y se coloca
- * flotando delante del visitante, mirándole siempre de frente.
+ * flotando delante del visitante, mirándole siempre de frente. También sirve
+ * para mostrar (`kind: 'help'`) los controles de VR al entrar en la sesión.
  */
 export function XRInfoBoard() {
   const xrActive = useStore((s) => s.xrActive)
@@ -29,6 +30,7 @@ export function XRInfoBoard() {
   const texture = useMemo(() => {
     if (!xrBoard) return null
     try {
+      if (xrBoard.kind === 'help') return makeHelpSheet()
       if (xrBoard.kind === 'station') {
         const estacion = STATION_MAP[xrBoard.id]
         return estacion ? makeStationSheet(estacion) : null

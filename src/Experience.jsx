@@ -11,7 +11,6 @@ import { Warehouse } from './components/Warehouse.jsx'
 import { ConveyorGame } from './components/ConveyorGame.jsx'
 import { ZuppyBot } from './components/ZuppyBot.jsx'
 import { KawaiiHamburger } from './components/KawaiiHamburger.jsx'
-import { Visitors } from './components/Visitors.jsx'
 import { Portal } from './components/Portal.jsx'
 import { XRSupport } from './xr/XRSupport.jsx'
 import { TourDirector } from './tour/TourDirector.jsx'
@@ -60,7 +59,11 @@ function ShadowToggle() {
 /**
  * Contenido de la escena 3D. Se mantiene la estética original (museo, ovni,
  * gato hambriento, hamburguesa voladora, banda logística) y se añaden las
- * estaciones del museo, el avatar, los visitantes de demostración y WebXR.
+ * estaciones del museo, el avatar y WebXR.
+ *
+ * Experiencia individual: no hay otros visitantes ni interacción con otras
+ * personas (ver README). Los únicos personajes son las mascotas de la marca
+ * (Xuppy y Burgy), que son decorativas.
  */
 export function Experience({ quality = 'media', preset }) {
   const mode = useStore((s) => s.mode)
@@ -91,7 +94,6 @@ export function Experience({ quality = 'media', preset }) {
           <Museum detail={detalle} />
           <Panels />
           <Stations />
-          <Visitors />
           <Interaction />
           {/* Guías kawaii del recorrido */}
           <ZuppyBot position={[-2.2, 0, 9.5]} />

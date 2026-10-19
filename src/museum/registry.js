@@ -6,4 +6,3 @@
  */
 export const REGISTRY = new Map() // carteles del museo (EXHIBITS)
 export const STATION_REGISTRY = new Map() // estaciones M1..M4
-export const NPC_REGISTRY = new Map() // guías y visitantes (bots)

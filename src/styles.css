@@ -1000,6 +1000,23 @@ kbd {
   color: #ffd98a;
 }
 
+/* Controles de VR en la pantalla de inicio */
+.controls-vr {
+  display: block;
+  margin-top: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.controls-vr li {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 0.35rem 0;
+}
+
+.controls-vr kbd {
+  white-space: nowrap;
+}
+
 .start-modules ul {
   list-style: none;
   display: flex;

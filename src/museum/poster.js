@@ -407,3 +407,106 @@ export function makeStationSheet(station) {
 
   return makeCanvasTexture(canvas)
 }
+
+/* ------------------------------------------------------------------ *
+ * Pizarra de ayuda de VR                                              *
+ * ------------------------------------------------------------------ */
+
+/** Contenido de la pizarra de bienvenida que se muestra al entrar en VR. */
+const AYUDA_VR = {
+  titulo: 'Bienvenido al Museo Xupply',
+  entrada: 'Estás dentro del museo, en primera persona. No hay otros visitantes: el recorrido es solo tuyo.',
+  controles: [
+    ['Gatillo al suelo', 'teletransportarte donde apuntes'],
+    ['Gatillo al cartel', 'abrir su ficha en esta pizarra'],
+    ['Joystick izquierdo', 'avanzar y desplazarte'],
+    ['Joystick derecho', 'girar 30° por pasos (sin mareo)'],
+    ['Cualquier mando', 'sirve: Quest, Pico, Index, Vive…'],
+  ],
+}
+
+/**
+ * Pizarra de ayuda para el visor: explica los controles sin depender de la
+ * interfaz HTML (que no existe dentro de VR). Mismo tamaño que la ficha de
+ * estación para reutilizar el mismo plano.
+ */
+export function makeHelpSheet() {
+  const W = 1024
+  const H = 768
+  const canvas = document.createElement('canvas')
+  canvas.width = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')
+  const accent = '#3ee6a0'
+
+  try {
+    ctx.fillStyle = '#10141f'
+    ctx.fillRect(0, 0, W, H)
+    const bg = ctx.createLinearGradient(0, 0, 0, H)
+    bg.addColorStop(0, '#161d2f')
+    bg.addColorStop(0.65, '#1e2739')
+    bg.addColorStop(1, '#10141f')
+    ctx.fillStyle = bg
+    ctx.fillRect(0, 0, W, H)
+
+    // Cabecera
+    ctx.fillStyle = accent
+    ctx.fillRect(0, 0, W, 92)
+    ctx.fillStyle = '#08110d'
+    ctx.font = `800 40px ${FONT}`
+    ctx.textAlign = 'left'
+    ctx.fillText('VR · CÓMO MOVERTE POR EL MUSEO', 44, 62)
+
+    // Título
+    ctx.fillStyle = '#ffffff'
+    const tSize = fitFont(ctx, AYUDA_VR.titulo, W - 88, 56, 800)
+    ctx.font = `800 ${tSize}px ${FONT}`
+    ctx.fillText(AYUDA_VR.titulo, 44, 180)
+
+    // Entradilla
+    ctx.font = `400 30px ${FONT}`
+    ctx.fillStyle = '#c9d6ef'
+    let y = 234
+    for (const line of wrapLines(ctx, AYUDA_VR.entrada, W - 88).slice(0, 3)) {
+      ctx.fillText(line, 44, y)
+      y += 42
+    }
+
+    // Controles
+    y += 12
+    for (const [tecla, texto] of AYUDA_VR.controles) {
+      ctx.font = `700 28px ${FONT}`
+      const ancho = ctx.measureText(tecla).width
+      roundRect(ctx, 44, y - 26, ancho + 34, 44, 12)
+      ctx.fillStyle = 'rgba(62,230,160,0.16)'
+      ctx.fill()
+      ctx.strokeStyle = accent
+      ctx.lineWidth = 2
+      ctx.stroke()
+      ctx.fillStyle = accent
+      ctx.fillText(tecla, 61, y + 4)
+
+      ctx.font = `400 26px ${FONT}`
+      ctx.fillStyle = '#e8edf7'
+      ctx.fillText(texto, 44 + ancho + 62, y + 4)
+      y += 68
+      if (y > H - 90) break
+    }
+
+    // Pie
+    ctx.font = `500 24px ${FONT}`
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'
+    ctx.textAlign = 'left'
+    ctx.fillText('Modo demostración local · datos ficticios · sin otros usuarios', 44, H - 40)
+  } catch (err) {
+    console.error('[ayuda de VR] error al pintar:', err)
+    ctx.fillStyle = '#1a2136'
+    ctx.fillRect(0, 0, W, H)
+    ctx.fillStyle = '#ffffff'
+    ctx.font = `700 52px ${FONT}`
+    ctx.textAlign = 'left'
+    ctx.fillText('VR: gatillo para teletransportarte', 44, 140)
+  }
+
+  return makeCanvasTexture(canvas)
+}

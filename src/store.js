@@ -53,7 +53,6 @@ export const useStore = create((set, get) => ({
   shadows: true,
   /** Hay backend multijugador real conectado. Siempre false en esta demo. */
   netMode: 'local',
-  visitorCount: 0,
 
   setView: (view) => set({ view }),
   setNickname: (nickname) => {
@@ -65,12 +64,11 @@ export const useStore = create((set, get) => ({
   setQualityPref: (qualityPref) => set({ qualityPref }),
   setQuality: (quality) => set({ quality }),
   setShadows: (shadows) => set({ shadows }),
-  setVisitorCount: (visitorCount) => set({ visitorCount }),
 
   /* ---------- Cámara / control ---------- */
   locked: false,
-  /** 'third' (tercera persona, por defecto) | 'first' */
-  cameraMode: 'third',
+  /** 'first' (primera persona, por defecto) | 'third' */
+  cameraMode: 'first',
   /** Controles táctiles activos (móvil / tablet) */
   touch: false,
   setLocked: (locked) => set({ locked }),
@@ -78,7 +76,7 @@ export const useStore = create((set, get) => ({
   setTouch: (touch) => set({ touch }),
 
   /* ---------- Interacción ---------- */
-  /** Objeto enfocado por el rayo: { id, title, kind: 'poster'|'station'|'npc' } */
+  /** Objeto enfocado por el rayo: { id, title, kind: 'poster'|'station' } */
   target: null,
   /** Cartel del museo abierto (id de EXHIBITS) */
   viewing: null,

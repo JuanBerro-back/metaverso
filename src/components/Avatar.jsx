@@ -61,10 +61,13 @@ export function Avatar() {
   const armR = useRef(null)
   const phase = useRef(0)
 
-  const nombre = useMemo(() => makeNameplate(nickname), [nickname])
-  useEffect(() => () => nombre.dispose(), [nombre])
+  const nombre = useMemo(
+    () => (cameraMode === 'third' && !xrActive ? makeNameplate(nickname) : null),
+    [nickname, cameraMode, xrActive]
+  )
+  useEffect(() => () => nombre?.dispose(), [nombre])
 
-  // En primera persona y en VR no se dibuja el avatar del jugador.
+  // En primera persona (por defecto) y en VR no se dibuja el avatar del jugador.
   const visible = cameraMode === 'third' && !xrActive
 
   useFrame((_, delta) => {
@@ -91,6 +94,9 @@ export function Avatar() {
       body.current.rotation.z = Math.sin(phase.current * 3.4) * amp * 0.05
     }
   })
+
+  // Sin avatar en primera persona: se ahorra geometría y el cartel del nombre.
+  if (!visible) return null
 
   return (
     <group ref={root} position={[playerState.x, 0, playerState.z]} visible={visible}>

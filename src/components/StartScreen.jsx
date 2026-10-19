@@ -84,7 +84,7 @@ export function StartScreen() {
           <span className="pill pill-demo" title={MODO_LOCAL.detalle}>
             ● {MODO_LOCAL.etiqueta}
           </span>
-          <span className="pill">Sin conexión ni registro</span>
+          <span className="pill">Sin conexión · un solo jugador</span>
           <span className="pill">Vite + Three.js</span>
         </div>
 
@@ -104,7 +104,7 @@ export function StartScreen() {
                 if (e.key === 'Enter') entrar(true)
               }}
             />
-            <p className="start-hint">Aparecerá sobre tu avatar dentro del museo.</p>
+            <p className="start-hint">Solo se usa para tu presentación: no hay otros usuarios en la demo.</p>
           </div>
 
           <div className="start-field">
@@ -135,11 +135,27 @@ export function StartScreen() {
             xrSupported ? (
               <>
                 <button type="button" className="btn btn-vr btn-lg" onClick={entrarVr}>
-                  Entrar en VR
+                  Entrar en VR (primera persona)
                 </button>
                 <p className="start-vr-note">
-                  En VR te desplazas teletransportándote con el mando y las fichas se abren en una pizarra 3D.
+                  Dentro del visor ves el museo <strong>en primera persona</strong>, sin avatar ni otros visitantes.
+                  Funciona con cualquier mando WebXR (Quest, Pico, Index, Vive…); también puedes avanzar con el
+                  joystick si tu mando lo trae.
                 </p>
+                <ul className="controls controls-vr">
+                  <li>
+                    <kbd>Gatillo</kbd> apuntar y soltar para teletransportarte
+                  </li>
+                  <li>
+                    <kbd>Joystick izq.</kbd> avanzar y desplazarte lateralmente
+                  </li>
+                  <li>
+                    <kbd>Joystick der.</kbd> girar 30° por pasos (cómodo, sin mareo)
+                  </li>
+                  <li>
+                    <kbd>Gatillo</kbd> apuntando a una estación o cartel para leer su ficha en una pizarra 3D
+                  </li>
+                </ul>
               </>
             ) : (
               <p className="start-vr-note">
@@ -186,17 +202,19 @@ export function StartScreen() {
               <kbd>D</kbd> moverte (o flechas)
             </li>
             <li>
-              <kbd>Ratón</kbd> girar la cámara · <kbd>V</kbd> cambiar 1.ª/3.ª persona
+              <kbd>Ratón</kbd> girar la vista · <kbd>V</kbd> alternar 1.ª (por defecto) y 3.ª persona
             </li>
             <li>
-              <kbd>E</kbd> o clic interactuar · <kbd>Shift</kbd> correr · <kbd>Espacio</kbd> saltar
+              <kbd>E</kbd> o clic leer una estación · <kbd>Shift</kbd> correr · <kbd>Espacio</kbd> saltar
             </li>
             <li>
               <kbd>ESC</kbd> pausa y menú · <kbd>M</kbd> recorrido guiado
             </li>
           </ul>
           <p className="start-hint">
-            En móvil y tablet aparecen controles táctiles (joystick, arrastrar para mirar y botón E).
+            La experiencia es individual y en <strong>primera persona</strong>: no verás a otros visitantes ni podrás
+            interactuar con nadie. En móvil y tablet aparecen controles táctiles (joystick, arrastrar para mirar y
+            botón E).
           </p>
         </section>
 
@@ -211,8 +229,8 @@ export function StartScreen() {
         </footer>
 
         <p className="start-honest">
-          Honestidad de la demo: no hay backend multijugador ni datos reales. Los visitantes que verás son
-          bots locales y todas las cifras de las estaciones son DEMO.
+          Honestidad de la demo: no hay backend multijugador, ni otros usuarios, ni datos reales. Todas las cifras de
+          las estaciones son DEMO y las mascotas son decorativas.
         </p>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { REGISTRY, STATION_REGISTRY, NPC_REGISTRY } from '../museum/registry.js'
+import { REGISTRY, STATION_REGISTRY } from '../museum/registry.js'
 import { EXHIBIT_MAP, EXHIBITS } from '../museum/exhibits.js'
 import { useStore } from '../store.js'
 import { touchInput } from '../player/input.js'
@@ -19,15 +19,19 @@ function promptFor(info) {
   if (!info) return null
   if (info.kind === 'station') return `E · abrir la estación ${info.title}`
   if (info.kind === 'poster') return `E · leer el cartel «${info.title}»`
-  return `E · hablar con ${info.title}`
+  return null
 }
 
 /**
  * Interacción por rayo.
  *
- * Mira desde la cámara hacia el centro de la pantalla y detecta carteles,
- * estaciones del museo Xupply y personajes. Ofrece resaltado, pista contextual
- * y apertura con la tecla E, con clic (ratón capturado) o con el botón táctil.
+ * Mira desde la cámara hacia el centro de la pantalla y detecta carteles y
+ * estaciones del museo Xupply. Ofrece resaltado, pista contextual y apertura
+ * con la tecla E, con clic (ratón capturado) o con el botón táctil.
+ *
+ * No hay interacción con otras personas: el recorrido es individual, sin
+ * multijugador ni NPC con los que hablar (ver README → "Por qué no hay otros
+ * visitantes").
  */
 export function Interaction() {
   const { camera } = useThree()
@@ -47,7 +51,6 @@ export function Interaction() {
 
     if (h.kind === 'station') st.setStation(h.id)
     else if (h.kind === 'poster') st.setViewing(h.id)
-    else if (h.kind === 'npc') st.setAssistant(h.line || '¡Hola! Soy un visitante de demostración.')
   }
 
   // Tecla E: interactuar.
@@ -78,7 +81,9 @@ export function Interaction() {
 
   useFrame((_, delta) => {
     const st = useStore.getState()
-    const activo = st.view === 'world' && !st.viewing && !st.station
+    // En VR el rayo del mando manda; el rayo de la mirada se apaga para no
+    // encender objetos que no se pueden abrir desde el visor.
+    const activo = st.view === 'world' && !st.viewing && !st.station && !st.xrActive
 
     // Botón táctil equivalente a la tecla E.
     if (touchInput.interact) {
@@ -89,7 +94,7 @@ export function Interaction() {
     let encontrado = null
 
     if (activo) {
-      const meshList = [...REGISTRY.values(), ...STATION_REGISTRY.values(), ...NPC_REGISTRY.values()]
+      const meshList = [...REGISTRY.values(), ...STATION_REGISTRY.values()]
       if (meshList.length) {
         raycaster.setFromCamera({ x: 0, y: 0 }, camera)
         raycaster.far = MAX_DISTANCE

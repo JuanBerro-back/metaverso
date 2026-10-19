@@ -95,7 +95,6 @@ function PausePanel({ onClose }) {
   const quality = useStore((s) => s.quality)
   const qualityPref = useStore((s) => s.qualityPref)
   const cameraMode = useStore((s) => s.cameraMode)
-  const visitorCount = useStore((s) => s.visitorCount)
   const inProgress = useStore((s) => s.inProgress)
   const tourSeen = useStore((s) => s.tourSeen)
 
@@ -240,8 +239,7 @@ function PausePanel({ onClose }) {
         </p>
 
         <p className="hint">
-          {MODO_LOCAL.etiqueta}
-          {visitorCount > 0 ? ` · ${visitorCount} visitantes simulados` : ''} · cámara: {cameraMode === 'third' ? '3.ª persona' : '1.ª persona'}
+          {MODO_LOCAL.etiqueta} · cámara: {cameraMode === 'third' ? '3.ª persona' : '1.ª persona (inmersiva)'}
           {' · '}
           calidad {quality}
           {qualityPref === 'auto' ? ' (automática)' : ''}
@@ -264,7 +262,6 @@ function Hud({ onMenu }) {
   const hearts = useStore((s) => s.hearts)
   const quality = useStore((s) => s.quality)
   const cameraMode = useStore((s) => s.cameraMode)
-  const visitorCount = useStore((s) => s.visitorCount)
   const tourActive = useStore((s) => s.tour.active)
   const xrSupported = useStore((s) => s.xrSupported)
 
@@ -290,7 +287,6 @@ function Hud({ onMenu }) {
           <span className="hud-right">
             <span className="hud-pill" title={MODO_LOCAL.detalle}>
               ● {MODO_LOCAL.etiqueta}
-              {visitorCount > 0 ? ` · ${visitorCount} bots` : ''}
             </span>
             <span className="hud-pill" title="Calidad gráfica efectiva">
               {quality}
